@@ -192,27 +192,28 @@ Pour faire simple, on utilise ici des **requêtes Ajax** en **Javascript** pour 
 
 ## 5 Chatbot avec le RAG
 
-Le **RAG (Retrieval-Augmented Generation)** consiste à utiliser un **modèle (LLM)** pré-entrainé de génération de textes comme vue dans la partie 4, de façon à ce qu'il utilise nos données (exemple :données d'entreprise) en vue de répondre à la question voulue. Le **RAG** permet d'éviter les **hallucinations** (réponses hors sujet du chatbot).
+Le **RAG (Retrieval-Augmented Generation)** consiste à utiliser un **modèle (LLM)** pré-entrainé de génération de textes comme vue dans la partie 4, de façon à ce qu'il utilise **uniquement** nos données comme contexte de travail (exemple :données d'entreprise) en vue de répondre à la question voulue. On lui proscrit de répondre en dehors de notre contexte. Le **RAG** permet d'éviter les **hallucinations** (réponses hors sujet du chatbot).
 
 ### 5.1 schéma du fonctionnement du RAG :
 
 Pour le **RAG** j'ai suivis cette [documentation](https://medium.com/enterprise-rag/an-introduction-to-rag-and-simple-complex-rag-9c3aa9bd017b), ansi que celle-ci :[documentation2](https://reglo.ai/les-composants-du-processus-de-rag/).
 
+**Workflow RAG**  
 ![Schéma RAG.](imageDoc/RAG.png)
 
 ### 5.2 Base de données vectorielles : Data Preparation :
 Cette étape consiste à préparer la base de données **vectorielles** pour le bon fonctionnement du **RAG**.
 
-- **Préparation des données : Raw data source** (A)
+- **Préparation des données : Raw data source** (**Workflow RAG**)
 
 On récupère tout d'abord les données pertinentes dans le cadre du **RAG** (exemple : fichier pdf). Pour simplifier le fonctionnement de l'application. Ces données doivent être en anglais afin que le modèle puisse les comprendre.
 
-- **Filtrage des données : Information Extraction**
+- **Filtrage des données : Information Extraction** (**Workflow RAG A**)
 
 On récupère les données des fichiers entrés (exemple : pdf) et on extrait les informations voulues (texte).  
 Ces informations constituent le contexte dans lequel le modèle LLM devra s'appuyer pour sa réponse en fonction de la question posée.  
 
-- **Chunking :**  
+- **Chunking :**  (**Workflow RAG B**)
 
 Le **chunking** c'est une manière de découper les informations textuelles en plusieurs parties. C'est même parties sont appelés des **chunks**.  Il y a plusieurs manières pour faire un **chunking**. Par exemple si un fichier Pdf possède 200 pages, le **chunking** va découper c'est 200 pages en 200 **chunks** différents. Ces 200 **chunks** réunis formeront le contenu complet du fichier Pdf.
 Dans le cadre de ce projet, le modèle utilise des chunks d'une longueur de 256 mots. soit une demi-page.
@@ -225,33 +226,33 @@ Pour éviter cela, il faut paramétrer l'opération de **chunking**(le découpag
 ![overlapping](imageDoc/overlapping.png)
 
 
-- **Encodage : Embedding**
+- **Encodage : Embedding** (**Workflow RAG C**)
 
 Pour l'étape de **l'embedding (encodage)**, j'ai suivis cette documentation : [documentation](https://sbert.net/docs/installation.html).  
 
 L'tilisation d'un **modèle d'IA** spécialisé dans l'**Embedding (encodage)** afin d'encoder tous les **chunks**. Ce modèle permet d'ajouter des éléments pertinents au contexte et d'enlever les éléments parasites. L'étape de l'**embedding** nous permettra plus tard de faire de **la recherche par similarité**.
 
-- **Sauvegarde**  
+- **Sauvegarde** (**Workflow RAG D**)
 
 Sauvegarde de tous les **chunks encoder(embedded)** dans la base de données **vectorielles (chromadb)**. Les attributs des champs encodés sont de type **BLOB**. Il y a aussi les champs **id, chunks** et **la requête original**.
 
 ### 5.3 Requête client : RAG
 
-- **Requête du client**
+- **Requête du client** (**Workflow RAG**)
 
 Récupération de la question que l'utilisateur à entrée dans le **chatbot**. Si la question n'est pas en anglais, alors on la traduit en anglais pour que le modèle puisse comprendre.
 
-- **Encodage : Embedding**
+- **Encodage : Embedding** (**Workflow RAG 1**)
 
 **Encodage(Embed)** de la question avec le même encodage utilisé précédemment. 
 
-- **Interroge la bdd vectorielles**
+- **Interroge la bdd vectorielles** (**Workflow RAG 2**)
 
 Requête vers la base de données **vectorielles** afin de comparer les **chunks encodés(embedded)** et **la question encodée(embedded)**.  
 Pour faire la comparaison le modèle peut utiliser différentes formules. Par exemple la formule de **cosinus similarité**, elle est utilisé par défaut dans le modèle de l'application. Cette formule comparera la question et les **chunks**(informations découpées du contexte) afin de récupérer les **chunks** les plus pertinents par rapport à la question.  
 Le nombre de **chunk** récupéré dépend de la taille du texte mis en paramètre du **modèle de génération de textes (LLM)**.  
 
-- **Décodage des données**
+- **Décodage des données** (**Workflow RAG 3**)
 
 Décodage de tous les chunks récupérés, ils formeront le contexte mis en paramètre du modèle, et on récupère la question originale non encodé.
 
@@ -259,11 +260,11 @@ Décodage de tous les chunks récupérés, ils formeront le contexte mis en para
 
 Le prompt représente toutes les données entrées dans le modèle en paramètre (le contexte et la question).
 
-- **Envoie des informations au modèle**
+- **Envoie des informations au modèle** (**Workflow RAG 4**)
 
 Tokenisation et envoie des informations au modèle de génération de texte LLM. (voir le grand 4 pour comprendre la tokenisation). Modèle Gpt2 utilisée par défaut dans ce projet.
 
-- **Réponse du modèle**
+- **Réponse du modèle** (**Workflow RAG 5**)
 
 On récupère la réponse du modèle puis on la transmet à l'utilisateur. On traduit si besoin la réponse dans la langue de l'utilisateur.
 
