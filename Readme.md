@@ -208,15 +208,15 @@ Cette étape consiste à préparer la base de données **vectorielles** pour le 
 
 On récupère tout d'abord les données pertinentes dans le cadre du **RAG** (exemple : fichier pdf). Pour simplifier le fonctionnement de l'application. Ces données doivent être en anglais afin que le modèle puisse les comprendre.
 
-- **Filtrage des données : Information Extraction** (**Workflow RAG A**)
+- **Filtrage des données : Information Extraction** (**Workflow RAG étape A**)
 
 On récupère les données des fichiers entrés (exemple : pdf) et on extrait les informations voulues (texte).  
 Ces informations constituent le contexte dans lequel le modèle LLM devra s'appuyer pour sa réponse en fonction de la question posée.  
 
-- **Chunking :**  (**Workflow RAG B**)
+- **Chunking :**  (**Workflow RAG étape B**)
 
 Le **chunking** c'est une manière de découper les informations textuelles en plusieurs parties. C'est même parties sont appelés des **chunks**.  Il y a plusieurs manières pour faire un **chunking**. Par exemple si un fichier Pdf possède 200 pages, le **chunking** va découper c'est 200 pages en 200 **chunks** différents. Ces 200 **chunks** réunis formeront le contenu complet du fichier Pdf.
-Dans le cadre de ce projet, le modèle utilise des chunks d'une longueur de 256 mots. soit une demi-page.
+Dans le cadre de ce projet, le modèle d'embedding "all-MiniLM-L6-v2" utilise des chunks d'une longueur de 256 mots. Soit environ une demi-page.
 
 ![chunking](imageDoc/chunking.png)
 
@@ -226,13 +226,13 @@ Pour éviter cela, il faut paramétrer l'opération de **chunking**(le découpag
 ![overlapping](imageDoc/overlapping.png)
 
 
-- **Encodage : Embedding** (**Workflow RAG C**)
+- **Encodage : Embedding** (**Workflow RAG étape C**)
 
 Pour l'étape de **l'embedding (encodage)**, j'ai suivis cette documentation : [documentation](https://sbert.net/docs/installation.html).  
 
 L'tilisation d'un **modèle d'IA** spécialisé dans l'**Embedding (encodage)** afin d'encoder tous les **chunks**. Ce modèle permet d'ajouter des éléments pertinents au contexte et d'enlever les éléments parasites. L'étape de l'**embedding** nous permettra plus tard de faire de **la recherche par similarité**.
 
-- **Sauvegarde** (**Workflow RAG D**)
+- **Sauvegarde** (**Workflow RAG étape D**)
 
 Sauvegarde de tous les **chunks encoder(embedded)** dans la base de données **vectorielles (chromadb)**. Les attributs des champs encodés sont de type **BLOB**. Il y a aussi les champs **id, chunks** et **la requête original**.
 
@@ -242,17 +242,17 @@ Sauvegarde de tous les **chunks encoder(embedded)** dans la base de données **v
 
 Récupération de la question que l'utilisateur à entrée dans le **chatbot**. Si la question n'est pas en anglais, alors on la traduit en anglais pour que le modèle puisse comprendre.
 
-- **Encodage : Embedding** (**Workflow RAG 1**)
+- **Encodage : Embedding** (**Workflow RAG étape 1**)
 
 **Encodage(Embed)** de la question avec le même encodage utilisé précédemment. 
 
-- **Interroge la bdd vectorielles** (**Workflow RAG 2**)
+- **Interroge la bdd vectorielles** (**Workflow RAG étape 2**)
 
 Requête vers la base de données **vectorielles** afin de comparer les **chunks encodés(embedded)** et **la question encodée(embedded)**.  
 Pour faire la comparaison le modèle peut utiliser différentes formules. Par exemple la formule de **cosinus similarité**, elle est utilisé par défaut dans le modèle de l'application. Cette formule comparera la question et les **chunks**(informations découpées du contexte) afin de récupérer les **chunks** les plus pertinents par rapport à la question.  
 Le nombre de **chunk** récupéré dépend de la taille du texte mis en paramètre du **modèle de génération de textes (LLM)**.  
 
-- **Décodage des données** (**Workflow RAG 3**)
+- **Décodage des données** (**Workflow RAG étape 3**)
 
 Décodage de tous les chunks récupérés, ils formeront le contexte mis en paramètre du modèle, et on récupère la question originale non encodé.
 
@@ -260,11 +260,11 @@ Décodage de tous les chunks récupérés, ils formeront le contexte mis en para
 
 Le prompt représente toutes les données entrées dans le modèle en paramètre (le contexte et la question).
 
-- **Envoie des informations au modèle** (**Workflow RAG 4**)
+- **Envoie des informations au modèle** (**Workflow RAG étape 4**)
 
 Tokenisation et envoie des informations au modèle de génération de texte LLM. (voir le grand 4 pour comprendre la tokenisation). Modèle Gpt2 utilisée par défaut dans ce projet.
 
-- **Réponse du modèle** (**Workflow RAG 5**)
+- **Réponse du modèle** (**Workflow RAG étape 5**)
 
 On récupère la réponse du modèle puis on la transmet à l'utilisateur. On traduit si besoin la réponse dans la langue de l'utilisateur.
 
@@ -282,6 +282,4 @@ Le **design** de l'application était fait de manière très simple à l'aide de
 
 ## To do:
 
-### RAG, en cours...
-
-Il sera disponible le 2 juillet 2024 en après-midi.
+### RAG views, en cours...
