@@ -216,7 +216,7 @@ Ces informations constituent le contexte dans lequel le modèle LLM devra s'appu
 - **Chunking :**  (**Workflow RAG étape B**)
 
 Le **chunking** c'est une manière de découper les informations textuelles en plusieurs parties. C'est même parties sont appelés des **chunks**.  Il y a plusieurs manières pour faire un **chunking**. Par exemple si un fichier Pdf possède 200 pages, le **chunking** va découper c'est 200 pages en 200 **chunks** différents. Ces 200 **chunks** réunis formeront le contenu complet du fichier Pdf.
-Dans le cadre de ce projet, le modèle d'embedding "all-MiniLM-L6-v2" utilise des chunks d'une longueur de 256 mots. Soit environ une demi-page.
+Dans le cadre de ce projet, le modèle d'embedding **"all-MiniLM-L6-v2"** utilise des chunks d'une longueur de 256 mots. Soit environ une demi-page.
 
 ![chunking](imageDoc/chunking.png)
 
