@@ -218,7 +218,7 @@ Le **chunking** c'est une manière de découper les informations textuelles en p
 Il se peut qu'une information commence dans un **chunk** et finisse dans un autre.
 Pour éviter cela, il faut paramétrer le chunking afin que la fin et le début des **chunks** se chevauchent entre eux. On appelle cela, de l'**Overlapping**.
 
-![Schéma RAG.](media/overlapping.png)
+![Schéma RAG.overlapping](media/overlapping.png)
 
 - **Encodage : Embedding**
 
