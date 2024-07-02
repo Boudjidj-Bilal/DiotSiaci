@@ -142,7 +142,7 @@ Pour ce **chatbot**, je me suis inspiré de cette [documentation](https://medium
 
 Voici un schéma représentant le fonctionnement d'un **chatbot**:
 
-![Schéma RAG.](media/chatbot.png)
+![Schéma RAG.](imageDoc/chatbot.png)
 
 ### 4.2 Le transformer
 
@@ -198,12 +198,12 @@ Le **RAG (Retrieval-Augmented Generation)** consiste à utiliser un **modèle (L
 
 Pour le **RAG** j'ai suivis cette [documentation](https://medium.com/enterprise-rag/an-introduction-to-rag-and-simple-complex-rag-9c3aa9bd017b), ansi que celle-ci :[documentation2](https://reglo.ai/les-composants-du-processus-de-rag/).
 
-![Schéma RAG.](media/RAG.png)
+![Schéma RAG.](imageDoc/RAG.png)
 
 ### 5.2 Base de données vectorielles : Data Preparation :
 Cette étape consiste à préparer la base de données **vectorielles** pour le bon fonctionnement du **RAG**.
 
-- **Préparation des données : Raw data source**
+- **Préparation des données : Raw data source** (A)
 
 On récupère tout d'abord les données pertinentes dans le cadre du **RAG** (exemple : fichier pdf). Pour simplifier le fonctionnement de l'application. Ces données doivent être en anglais afin que le modèle puisse les comprendre.
 
@@ -215,23 +215,25 @@ Ces informations constituent le contexte dans lequel le modèle LLM devra s'appu
 - **Chunking :**  
 
 Le **chunking** c'est une manière de découper les informations textuelles en plusieurs parties. C'est même parties sont appelés des **chunks**.  Il y a plusieurs manières pour faire un **chunking**. Par exemple si un fichier Pdf possède 200 pages, le **chunking** va découper c'est 200 pages en 200 **chunks** différents. Ces 200 **chunks** réunis formeront le contenu complet du fichier Pdf.
+Dans le cadre de ce projet, le modèle utilise des chunks d'une longueur de 256 mots. soit une demi-page.
 
-![Schéma RAG.](media/chunking.png)
+![chunking](imageDoc/chunking.png)
 
 Il se peut qu'une information commence dans un **chunk** et finisse dans un autre.
-Pour éviter cela, il faut paramétrer le chunking afin que la fin et le début des **chunks** se chevauchent entre eux. On appelle cela, de l'**Overlapping**.
+Pour éviter cela, il faut paramétrer l'opération de **chunking**(le découpage) en sorte que la fin et le début des **chunks** se chevauchent entre eux. On appelle cela, de l'**Overlapping**. Cela nous permet d'éviter qu'un contexte se trouve à cheval entre deux **chunks**. Il s'agit d'une fenêtre glissante.
 
-![SchémaOverlapping](media/overlapping.png)
+![overlapping](imageDoc/overlapping.png)
+
 
 - **Encodage : Embedding**
 
 Pour l'étape de **l'embedding (encodage)**, j'ai suivis cette documentation : [documentation](https://sbert.net/docs/installation.html).  
 
-Utilisation d'un **modèle d'IA** spécialisé dans l'**encodage** afin d'encoder tous les **chunks**. Ce modèle permet d'ajouter des éléments pertinents au contexte et d'enlever les éléments parasites. L'étape de l'**embedding** nous permettra plus tard de faire **la recherche par similarité**.
+L'tilisation d'un **modèle d'IA** spécialisé dans l'**Embedding (encodage)** afin d'encoder tous les **chunks**. Ce modèle permet d'ajouter des éléments pertinents au contexte et d'enlever les éléments parasites. L'étape de l'**embedding** nous permettra plus tard de faire de **la recherche par similarité**.
 
 - **Sauvegarde**  
 
-Sauvegarde de tous les **chunks encoder(embedded)** dans la base de données **vectorielles (chromadb)**. Les attribus des champs encodés sont de type **BLOB**. Il y a aussi les champs **id, chunks** et **la requête original**.
+Sauvegarde de tous les **chunks encoder(embedded)** dans la base de données **vectorielles (chromadb)**. Les attributs des champs encodés sont de type **BLOB**. Il y a aussi les champs **id, chunks** et **la requête original**.
 
 ### 5.3 Requête client : RAG
 
@@ -246,20 +248,20 @@ Récupération de la question que l'utilisateur à entrée dans le **chatbot**. 
 - **Interroge la bdd vectorielles**
 
 Requête vers la base de données **vectorielles** afin de comparer les **chunks encodés(embedded)** et **la question encodée(embedded)**.  
-Pour faire la comparaison le modèle peut utiliser différentes formules. Par exemple la formule de **cosinus similarité**. Cette formule comparera la question et les **chunks**(informations découpées du contexte) afin de récupérer les **chunks** les plus pertinents par rapport à la question.  
+Pour faire la comparaison le modèle peut utiliser différentes formules. Par exemple la formule de **cosinus similarité**, elle est utilisé par défaut dans le modèle de l'application. Cette formule comparera la question et les **chunks**(informations découpées du contexte) afin de récupérer les **chunks** les plus pertinents par rapport à la question.  
 Le nombre de **chunk** récupéré dépend de la taille du texte mis en paramètre du **modèle de génération de textes (LLM)**.  
 
 - **Décodage des données**
 
 Décodage de tous les chunks récupérés, ils formeront le contexte mis en paramètre du modèle, et on récupère la question originale non encodé.
 
-- **Formation du prompte**
+- **Formation du prompt**
 
-Le prompte représente toutes les données entrées dans le modèle en paramètre (le contexte et la question).
+Le prompt représente toutes les données entrées dans le modèle en paramètre (le contexte et la question).
 
 - **Envoie des informations au modèle**
 
-Tokenisation et envoie des informations au modèle. (voir le grand 4 pour comprendre la tokenisation).
+Tokenisation et envoie des informations au modèle de génération de texte LLM. (voir le grand 4 pour comprendre la tokenisation). Modèle Gpt2 utilisée par défaut dans ce projet.
 
 - **Réponse du modèle**
 
