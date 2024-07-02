@@ -1,0 +1,31 @@
+html, body {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+
+}
+.wrapper {
+  box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.lienMenu{
+  margin: 20px;
+}
+
+.contentCard {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card{
+  margin: 1%;
+}
+
+.chat-box {
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}

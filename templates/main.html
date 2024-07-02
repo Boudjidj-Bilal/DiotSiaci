@@ -1,0 +1,21 @@
+{% extends "base.html" %}  {% comment %} on etend le fichier base.html dans le dossier templates à la racine {% endcomment %}
+{% load i18n %}
+{% block content %} 
+ 
+    <h2 class="pb-2 border-bottom py-3">{% trans "Liste article : " %}</h2> 
+    <div class="d-flex justify-content-evenly contentCard">
+        {% for article in article_liste %}  
+        <div class="card shadow" style="width: 18rem;">
+            <div class="card-body">
+            <h5 class="card-title">{{ article.title }}</h5>
+            <p class="card-text text-truncate" style="max-width: 200px;">{{ article.content }}</p>
+            <a href="{% url 'appMain:pageArticle' article.id %}">{{ article.title }}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <p class="pyt-1">{% trans "Gérer les "%}<a target="_blank" href="{% url 'admin:index' %}">articles</a>.</p>
+{% endblock %} 
+
+{% block js %}
+{% endblock %}

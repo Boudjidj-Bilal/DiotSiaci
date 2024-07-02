@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% load i18n %}
+
+{% block content %}
+<center>
+    <h1>{% trans "Model hébergé localement chatgpt2 :"%}</h1>
+    <br>
+    <div id="chat-log">        
+
+    </div>
+    <form method="POST"  action="">
+        {% csrf_token %}
+        <br>
+        <input class="form-control shadow-sm" placeholder="Message" id="userinput" type="text" name="message">
+
+        <br>
+    </form>
+    <button class="btn btn-primary" onclick="chatbot()">{% trans "Entrer"%}
+    </button>
+    <br>
+    <br>
+    <p>{% trans "Voici un chatbot qui utilise le model chatgpt2. Par soucis d'espace disque, je n'ai pas pu installer un model puissant. Le chatbot ne fonctionne donc pas très bien."%}</p>
+</center>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

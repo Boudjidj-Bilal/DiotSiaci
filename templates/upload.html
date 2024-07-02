@@ -1,0 +1,43 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Téléverser Fichiers{% endblock %}
+
+{% block content %}
+<h5>Téléverser des fichiers PDF et Text</h5>
+<form id="upload-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group mt-3">
+        <label for="files">Sélectionner des fichiers en anglais:</label>
+        <input type="file" class="form-control shadow-sm" id="files" name="files" accept=".pdf,.txt" multiple required>
+        <div id="file-error" class="text-danger mt-1"></div>
+
+    </div>
+
+
+        <button type="submit"class="btn btn-primary mt-2" type="button"> Transferer...
+          <span  id="upload-spinner"  style="display: none;">  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" ></span></span>
+        </button>
+
+</form>
+
+<div id="upload-message" class="mt-3"></div>
+
+
+
+{% if uploaded_files %}
+    <h3 class="mt-4">Televerser les Fichiers</h3>
+    <ul>
+        {% for file in uploaded_files %}
+            <li>{{ file }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'js/uploadfiles.js' %}"></script>
+{% endblock %}
+

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chatbot RAG{% endblock %}
+
+{% block content %}
+<h5>Chat avec RAG LLM</h5>
+
+<div class="chat-box mt-3 p-3 border">
+    <div id="chat-log" class="mb-3" style="height: 300px; overflow-y: auto;"></div>
+    <textarea id="chat-input" class="form-control mb-2 shadow-sm" rows="3" placeholder="Type your message..."></textarea>
+    
+
+    <button  id="send-btn" type="submit"class="btn btn-primary mt-2" type="button"> Envoyer...
+          <span   id="chatbot-spinner"  style="display: none;">  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" ></span></span>
+    </button>
+
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/chatbot.js' %}"></script>
+{% endblock %}

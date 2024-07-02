@@ -1,0 +1,14 @@
+{% extends "base.html" %}  {% comment %} on etend le fichier base.html dans le dossier templates à la racine {% endcomment %}
+{% load i18n %}
+{% block content %} 
+
+    <h2>{% trans "Titre article : " %} {{ article.title }}</h2>
+
+    <p>{% trans "Contenus :" %}</p>
+    <p>{{ article.content }}</p>
+    <p>{% trans "Date de publication :" %}  {{ article.publication_date }}</p>
+
+{% endblock %} 
+
+{% block js %}
+{% endblock %}
