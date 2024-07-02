@@ -202,10 +202,13 @@ Pour le **RAG** j'ai suivis cette [documentation](https://medium.com/enterprise-
 
 ### 5.2 Base de données vectorielles : Data Preparation :
 Cette étape consiste à préparer la base de données **vectorielles** pour le bon fonctionnement du **RAG**.
-- **Préparation des données : Row data source**
+
+- **Préparation des données : Raw data source**
+
 On récupère tout d'abord les données pertinentes dans le cadre du **RAG** (exemple : fichier pdf). Pour simplifier le fonctionnement de l'application. Ces données doivent être en anglais afin que le modèle puisse les comprendre.
 
 - **Filtrage des données : Information Extraction**
+
 On récupère les données des fichiers entrés (exemple : pdf) et on extrait les informations voulues (texte).  
 Ces informations constituent le contexte dans lequel le modèle LLM devra s'appuyer pour sa réponse en fonction de la question posée.  
 
@@ -218,7 +221,7 @@ Le **chunking** c'est une manière de découper les informations textuelles en p
 Il se peut qu'une information commence dans un **chunk** et finisse dans un autre.
 Pour éviter cela, il faut paramétrer le chunking afin que la fin et le début des **chunks** se chevauchent entre eux. On appelle cela, de l'**Overlapping**.
 
-![Schéma RAG.overlapping](media/overlapping.png)
+![SchémaOverlapping](media/overlapping.png)
 
 - **Encodage : Embedding**
 
