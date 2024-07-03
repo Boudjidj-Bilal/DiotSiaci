@@ -297,6 +297,7 @@ Chargement de la **base de données vectorielles Chroma**:
 La récupération des fichier s'effectue dans la fonction **upload_files** se trouvant dans la view.  
 
 Tout d'abord, elle vérifie l'extentions des fichiers entrée dans le formulaire. Seuls les fichiers pdf et txt sont accéptés.  
+  
 Puis elle enregistre les fichiers dans le répertoire uploads à la racine du projet.  
 On fait ensuite appel à la fonction **vectorDocuments**. Elle prend en paramètre les fichiers et retourne une liste de tout les **chunks**. Les fichiers sont découpés en plusieurs **chunks** de cette manière:
 
@@ -309,7 +310,7 @@ On fait ensuite appel à la fonction **vectorDocuments**. Elle prend en paramèt
 Ensuite la fonction **upload_files** fait appel à la fonction **addDocumentDB**. Celle-ci ajoute la liste des chunks dans **la base de données vectorielles ChromaDB**
 
 - Requête client : **RAG** :
-La gestion des interactions avec le chatbot s'effectue dans la fonction **chatbotRag** se trouvant dans la view.  
+La gestion des interactions avec le chatbot s'effectue dans la fonction **chatbotRag** se trouvant dans la view. La **persistance des données** n'étant pas implémentée dans cette application, les requêtes du **chatbot** se font via des requêtes **Javascript** afin que le fil de la conversation reste sur la page sans l'actualiser.
 
 Dans cette fonction on récupère la question de l'utilisateur. On la traduit en anglais si besoin. Puis on fait appel à la fonction **process_query** qui va traiter la requête de l'utilisateur et retourner une réponse.  
   
