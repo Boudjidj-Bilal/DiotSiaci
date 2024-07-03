@@ -106,7 +106,7 @@ def searchSimilarity(query, collection_name):
     )
     return results['documents'][0][0]
 
-def gradGeneration(similarity_result, query):
+def gradGeneration(similarity_result, query, max_new_tokens=50, do_sample=True, num_return_sequences=1, early_stopping=True):
     """
     Génère une réponse basée sur le résultat de similarité et la requête.
 
@@ -125,10 +125,10 @@ def gradGeneration(similarity_result, query):
     inputs = tokenizer.encode(input_text, return_tensors='pt')
     outputs = model.generate(
         inputs,
-        max_new_tokens=50,
-        do_sample=True,
-        num_return_sequences=1,
-        early_stopping=True
+        max_new_tokens=max_new_tokens,
+        do_sample=do_sample,
+        num_return_sequences=num_return_sequences,
+        early_stopping=early_stopping
     )
 
     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
@@ -187,11 +187,29 @@ def process_query(query, collection_name):
 # ------------------------------------------------------------------------------------------------------
 
 def translation(texte,Langue): # function de traduction de texte qui retourne le texte traduit
+    """
+    Gère la traduction de texte
+
+    Args:
+        Prend le texte à traduire et la langue.
+
+    Returns:
+        str: retourne le texte traduit.
+    """
     trad = GoogleTranslator(source='auto', target=Langue).translate(texte)
     return trad
 
 
-def chatbotLLM(user_message, langueUser):
+def chatbotLLM(user_message, langueUser, max_new_tokens=50, do_sample=True, num_return_sequences=1, early_stopping=True):
+    """
+    Génère la réponse textuelle du chatbot
+
+    Args:
+        Prend la question de l'utilisateur et la langue.
+
+    Returns:
+        str: retourne la réponse du chatbot.
+    """
     texteEntree = translation(user_message, "en")
     #result = generation_texte(texteEntree)
 
@@ -199,10 +217,10 @@ def chatbotLLM(user_message, langueUser):
     inputs = tokenizer.encode(texteEntree, return_tensors='pt')
     outputs = model.generate(
         inputs,
-        max_new_tokens=50,
-        do_sample=True,
-        num_return_sequences=1,
-        early_stopping=True
+        max_new_tokens=max_new_tokens,
+        do_sample=do_sample,
+        num_return_sequences=num_return_sequences,
+        early_stopping=early_stopping
     )
 
     result = tokenizer.decode(outputs[0], skip_special_tokens=True)

@@ -17,6 +17,15 @@ import os
 collection_name = 'mycollection'
 
 def chatbotGpt2(request): # Fonction du chatbot pour le model gpt2.
+    """
+    Gère les interactions avec le chatbot.
+
+    Args:
+        request (HttpRequest): La requête HTTP reçue, avec la question de l'utilisateur.
+
+    Returns:
+        JsonResponse: La réponse du chatbot sous forme JSON.
+    """
     if request.method == 'POST': # On vérifie si la requête est de type Post.       
         user_message = request.POST.get("message")
         langueUser = request.LANGUAGE_CODE
@@ -32,14 +41,41 @@ def chatbotGpt2(request): # Fonction du chatbot pour le model gpt2.
 
 
 def mainViews(request): # Page principal.
+    """
+    Affiche la page principal avec les articles.
+
+    Args:
+        request (HttpRequest): La requête HTTP reçue.
+
+    Returns:
+        render: La page main.html.
+    """
     articles = Articles.objects.filter()
     return render(request, 'main.html', context={"article_liste":articles}) #crée la page de la liste des articles.
 
 def article(request, articleId): # Page détail d'un article.
+    """
+    Affiche la page détail d'un article.
+
+    Args:
+        request (HttpRequest): La requête HTTP reçue, et l'id de l'article.
+
+    Returns:
+        render: La page article.html.
+    """
     article = Articles.objects.get(id=articleId)
     return render(request, 'article.html', context={"article":article}) # Crée la page de la liste des articles.
 
 def change_language(request, language_code): # On change la langue de l'application.
+    """
+    Gère le changement de langue de l'application par l'utilisateur.
+
+    Args:
+        request (HttpRequest): La requête HTTP reçue, avec la langue choisie par l'utilisateur.
+
+    Returns:
+        return: La même page avec la langue changé.
+    """
     response = redirect(request.META.get('HTTP_REFERER', '/'))
     if language_code in dict(settings.LANGUAGES):
         activate(language_code)
@@ -51,7 +87,7 @@ def change_language(request, language_code): # On change la langue de l'applicat
 @csrf_exempt
 def chatbotRag(request):
     """
-    Gère les interactions avec le chatbot.
+    Gère les interactions avec le chatbot RAG.
 
     Args:
         request (HttpRequest): La requête HTTP reçue, avec une requête utilisateur dans le corps.
