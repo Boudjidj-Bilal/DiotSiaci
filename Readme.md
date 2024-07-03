@@ -160,7 +160,7 @@ Ici le modèle est de type **"texte génération"**. Il utilise par défaut le m
 
 ### 4.4 La views
 On utilise ici un fichier utils.py, la views pourra faire appel à toutes les fonctions se trouvant de ce fichier.
-- Avant la view du **chatbot**, on appelle en **variable global** le modèle, afin qu'il se lance au démarrage de l'application. Il est ainsi accessible sur nimportequ'elle views de l'app **main**.
+- Avant la view du **chatbot**, on appelle en **variable global** le modèle, afin qu'il se lance au démarrage de l'application. Il est ainsi accessible sur nimporte qu'elle views de l'app **main**.
 
 		generation_texte = pipeline("text-generation")
 
@@ -206,7 +206,7 @@ Cette étape consiste à préparer la base de données **vectorielles** pour le 
 
 - **Préparation des données : Raw data source** (**Workflow RAG**)
 
-On récupère tout d'abord les données pertinentes dans le cadre du **RAG** (exemple : fichier pdf). Pour simplifier le fonctionnement de l'application. Ces données doivent être en anglais afin que le modèle puisse les comprendre.
+On récupère tout d'abord les données pertinentes dans le cadre du **RAG** (exemple : fichier pdf). Pour simplifier le fonctionnement de l'application. Ces données doivent être en anglais afin que le modèle puisse les comprendre. Dans le cadre de cette application, les fichiers précédemment téléversés seront supprimés automatiquement pour des phases de test dans le rag pour des besoins de test.
 
 - **Filtrage des données : Information Extraction** (**Workflow RAG étape A**)
 
@@ -270,16 +270,54 @@ On récupère la réponse du modèle puis on la transmet à l'utilisateur. On tr
 
 ### 5.4 la Views
 
-On utilise ici un fichier **utils.py**, la views pourra faire appel à toutes les fonctions se trouvant de ce fichier.
+On utilise ici un fichier **utils.py**, la views pourra faire appel à toutes les fonctions se trouvant dans ce fichier.
+
+- On importe en **variables globales le modèle LLM** ainsi que **le modèle d'embedding**.
+Chargement du **modèle de génération de textes** :
+
+		model_name = "openai-community/gpt2"
+
+		model = GPT2LMHeadModel.from_pretrained(model_name)
+		tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+
+Chargement du **modèle d'embedding (encodage)** :
+
+		model_embedding = "sentence-transformers/all-MiniLM-L6-v2"
+		embedding_model = SentenceTransformer(model_embedding)
+		embedding_function = SentenceTransformerEmbeddings(model_name=model_embedding)
+
+Chargement de la **base de données vectorielles Chroma**:
+
+		from chromadb.config import Settings
+		localhost = 'localhost'
+		port = '8001'
+		chroma_client = chromadb.HttpClient(host=localhost, port=port, settings=Settings())
+
+- Récupération des fichier : **Data Preparation** :
+La récupération des fichier s'effectue dans la fonction **upload_files** se trouvant dans la view.  
+
+Tout d'abord, elle vérifie l'extentions des fichiers entrée dans le formulaire. Seuls les fichiers pdf et txt sont accéptés.  
+Puis elle enregistre les fichiers dans le répertoire uploads à la racine du projet.  
+On fait ensuite appel à la fonction **vectorDocuments**. Elle prend en paramètre les fichiers et retourne une liste de tout les **chunks**. Les fichiers sont découpés en plusieurs **chunks** de cette manière:
+
+		chunk_size = 1000
+		chunk_overlap = 100
+		text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        chunks = text_splitter.split_documents(document)
+        chunked_documents.extend(chunks)
+
+Ensuite la fonction **upload_files** fait appel à la fonction **addDocumentDB**. Celle-ci ajoute la liste des chunks dans **la base de données vectorielles ChromaDB**
+
+- Requête client : **RAG** :
+La gestion des interactions avec le chatbot s'effectue dans la fonction **chatbotRag** se trouvant dans la view.  
+
+Dans cette fonction on récupère la question de l'utilisateur. On la traduit en anglais si besoin. Puis on fait appel à la fonction **process_query** qui va traiter la requête de l'utilisateur et retourner une réponse.  
   
-to do...
+On fait la **recherche de similarité** grâce à la fonction : **searchSimilarity** qui prend en paramètre la question de l'utilisateur.  
+  
+Puis on génère une réponse grâce à la fonction **gradGeneration** qui prend en paramètre le contexte trouvé par la recherche de similarité et la question de l'utilisateur.  
 
 ## 6 Design de l'application
 
-Le **design** de l'application était fait de manière très simple à l'aide de **Bootstrap**. Et quelques éléments ont été améliorés avec du **CSS** pur, stocké dans un fichier **style.css**.
+Le **design** de l'application a était fait de manière très simple à l'aide de **Bootstrap**. Et quelques éléments ont été améliorés avec du **CSS** pur, stocké dans un fichier **style.css**.
 
-  
-
-## To do:
-
-### RAG views, en cours...
