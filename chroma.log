@@ -91,3 +91,5 @@
 [32mINFO[0m:     [03-07-2024 16:14:41] 127.0.0.1:50007 - "POST /api/v1/collections/73d44636-b776-41e9-9418-346e585447e0/query HTTP/1.1" 200
 [32mINFO[0m:     [03-07-2024 16:15:24] 127.0.0.1:50208 - "GET /api/v1/collections/mycollection?tenant=default_tenant&database=default_database HTTP/1.1" 200
 [32mINFO[0m:     [03-07-2024 16:15:24] 127.0.0.1:50208 - "POST /api/v1/collections/73d44636-b776-41e9-9418-346e585447e0/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2024 10:11:25] 127.0.0.1:58200 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2024 10:11:25] 127.0.0.1:58200 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200

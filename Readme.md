@@ -195,8 +195,8 @@ Le **RAG (Retrieval-Augmented Generation)** consiste à utiliser un **modèle (L
 
 ### 5.1 schéma du fonctionnement du RAG :
 
-Pour le **RAG** j'ai suivis cette [documentation](https://medium.com/enterprise-rag/an-introduction-to-rag-and-simple-complex-rag-9c3aa9bd017b), ansi que celle-ci :[documentation2](https://reglo.ai/les-composants-du-processus-de-rag/).  (`changer en: j'ai suivis ces documentations  : lien1, lien2)
-
+Pour le **RAG** j'ai suivis ces documentations : [lien1](https://medium.com/enterprise-rag/an-introduction-to-rag-and-simple-complex-rag-9c3aa9bd017b), [lien2](https://reglo.ai/les-composants-du-processus-de-rag/).  
+  
 **Workflow RAG**  
 ![Schéma RAG.](imageDoc/RAG.png)
 
@@ -301,7 +301,7 @@ Tout d'abord, elle vérifie l'extentions des fichiers entrée dans le formulaire
 Puis elle enregistre les fichiers dans le répertoire uploads à la racine du projet.  
 On fait ensuite appel à la fonction **vectorDocuments**. Elle prend en paramètre les fichiers et retourne une liste de tout les **chunks**. Les fichiers sont découpés en plusieurs **chunks** de cette manière:
 
-		chunk_size = 256  ( `attention : c'est 256`)
+		chunk_size = 256
 		chunk_overlap = 20 
 		text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
         chunks = text_splitter.split_documents(document)

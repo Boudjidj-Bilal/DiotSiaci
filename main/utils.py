@@ -43,7 +43,7 @@ tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
 
 
-def vectorDocuments(files, chunk_size=1000, chunk_overlap=100):
+def vectorDocuments(files, chunk_size=256, chunk_overlap=20):
     """
     Divise les documents en petits chunks pour le traitement.
 
